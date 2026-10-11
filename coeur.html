@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pour toi</title>
+    <!-- Lien vers le fichier CSS externe -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Conteneur des cœurs flottants (générés en JS) -->
+    <div id="hearts-background"></div>
+
+    <div class="container">
+        <div class="eyebrow">Pour toi</div>
+        <div class="final-title">mon dernier mot</div>
+  
+        
+
+        <!-- Barre de chargement -->
+        <div class="progress-wrapper">
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-heart" id="progressHeart"></div>
+
+           <div class="target-heart-container" id="targetHeart"></div>
+        </div>
+              <!-- Modifiez cette ligne dans votre écran de chargement -->
+<p class="subtitle-bottom" id="loading-text">Un peu de patience, la plus belle surprise arrive</p>
+        <!-- Conteneur pour l'explosion finale (géré par JS) -->
+    <div id="explosion-container"></div>
+
+    <!-- Conteneur pour les cœurs qui flottent en continu (géré par CSS/JS au chargement) -->
+    <div id="floating-hearts-container"></div>
+    </div>
+
+    <!-- Lien vers le fichier JavaScript externe -->
+    <script src="script.js"></script>
+</body>
+</html

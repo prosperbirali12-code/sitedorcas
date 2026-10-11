@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#14030b">
+  <meta name="description" content="Un message pour Dorcas.">
+  <title>Une petite attention pour Dorcas</title>
+ 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="audio.mp3" as="audio" type="audio/mpeg">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- 1. Verrouillage -->
+  <section id="lock-screen" class="screen active" aria-label="Code secret">
+    <div class="lock-card">
+      <span class="eyebrow">Espace privé</span>
+      <h1>Dorcas </h1>
+      <p>Entre le code secret pour ouvrir ton message</p>
+
+      <div class="pin-display" id="pin-display" aria-live="polite">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+
+      <div class="keypad">
+        <button class="key" data-key="1">1</button>
+        <button class="key" data-key="2">2</button>
+        <button class="key" data-key="3">3</button>
+        <button class="key" data-key="4">4</button>
+        <button class="key" data-key="5">5</button>
+        <button class="key" data-key="6">6</button>
+        <button class="key" data-key="7">7</button>
+        <button class="key" data-key="8">8</button>
+        <button class="key" data-key="9">9</button>
+        <button class="key ghost" data-action="clear">⌫</button>
+        <button class="key" data-key="0">0</button>
+        <button class="key ghost" data-action="back" aria-label="Supprimer">↩️</button>
+      </div>
+
+      <div class="error-msg" id="error-msg" role="alert"></div>
+      <!-- AJOUTEZ LA SIGNATURE ICI -->
+      <div class="signature">@pros_birali</div>
+    </div>
+
+
+    <script src="script.js"></script>
+  </section>

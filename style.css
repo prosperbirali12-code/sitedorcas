@@ -1,0 +1,946 @@
+
+    :root {
+      --bg: #210015;
+      --bg-soft: #2f0124;
+      --rose: #f4a7b9;
+      --rose-strong: #e2557a;
+      --gold: #e8c48a;
+      --text: #5905ff;
+      --muted: rgba(251, 238, 242, 0.62);
+      --line: rgba(81, 2, 2, 0.22);
+      --paper: #fffaf5;
+      --ink: #2b1a20;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --hand: 'Caveat', cursive;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+/*pour le corps de mon projet*/
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background:
+        radial-gradient(1200px 600px at 50% -10%, rgba(226, 85, 122, 0.22), transparent 60%),
+        radial-gradient(800px 500px at 100% 100%, rgba(232, 196, 138, 0.08), transparent 60%),
+        var(--bg);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /*pour l ecran avec le cadre*/
+
+    .screen {
+      display: none;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: max(24px, env(safe-area-inset-top)) 20px max(110px, calc(env(safe-area-inset-bottom) + 100px));
+    }
+    .screen.active { display: flex; animation: fadeUp 0.9s var(--ease) both; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 460px;
+        padding: 38px 20px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 28px;
+        background: rgba(70, 35, 100, 0.20);
+        box-shadow: 0 0 60px rgba(190, 70, 255, 0.12);
+        backdrop-filter: blur(12pc);
+    }
+/* ---------- 1. Verrouillage ---------- */
+    #lock-screen { align-items: center; justify-content: center; padding-bottom: 24px; }
+
+    .lock-card {
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      padding: 44px 28px 36px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid var(--line);
+      box-shadow: 0 40px 80px -20px rgba(0,0,0,0.7);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .lock-card h1 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 2.1rem;
+      line-height: 1.15;
+      margin: 12px 0 8px;
+    }
+
+    .lock-card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 28px; }
+
+    .pin-display { display: flex; justify-content: center; gap: 16px; margin-bottom: 30px; }
+
+    /* Style par défaut du point vide */
+.dot {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #d4af37;
+    border-radius: 50%;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+/* Style du point lorsqu'un chiffre est entré (rempli) */
+.dot.active {
+    background-color: #ff4d6d;
+    border-color: #ff4d6d;
+    box-shadow: 0 0 8px #ff4d6d;
+}
+
+    @keyframes shake {
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 68px);
+      justify-content: center;
+      gap: 16px 22px;
+    }
+
+    .key {
+      width: 68px; 
+      height: 68px;
+      border: none;
+      background: rgba(255,255,255,0.04);
+      color: #ffffff;
+      font-size: 1.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: transform 0.15s;
+    
+
+    clip-path: polygon(
+      50% 100%,
+      8% 60%,
+      0% 35%,
+      8% 12%,
+      25% 5%,
+      50% 28%,
+      75% 5%,
+      92% 12%,
+      100% 35%,
+      92% 60%
+    ) !important;
+
+    }
+
+    .key:active {
+        transform: scale(0.92);
+        
+    }
+
+
+    .error-msg { color: var(--rose); font-size: 0.85rem; min-height: 22px; margin-top: 18px; }
+
+    /* Les 4 cercles de progression du mot de passe */
+.circles-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.pin-circle {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #d4af37;
+    border-radius: 50%;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+/* Style du cercle lorsqu'un chiffre est entré */
+.pin-circle.filled {
+    background-color: #ff4d6d;
+    border-color: #ff4d6d;
+    box-shadow: 0 0 8px #ff4d6d;
+}
+
+/* Effet au clic sur une touche */
+.heart-key:active {
+    background-color: #ff4d6d;
+    transform: rotate(-45deg) scale(0.95);
+}
+
+/* Texte à l'intérieur des touches (remis droit grâce au rotate inverse) */
+.heart-key span {
+    position: relative;
+    z-index: 2;
+    transform: rotate(45deg);
+    font-size: 18px;
+    color: #f1e6f0;
+    font-weight: bold;
+}
+
+/* Ajustement de la taille du texte pour les boutons "Effacer" */
+.heart-key.clear-btn span {
+    font-size: 11px;
+}
+
+.heart-key.delete-btn span {
+    font-size: 14px;
+}
+
+
+
+
+
+/* deuxieme page celle dun petit msg*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, #280000, #3e005f);
+    font-family: arial, sans-serif;
+    padding: 20px;
+}
+
+.cadre-message {
+    width: 100%;
+    max-width: 600px;
+    padding: 40px 30px;
+    text-align: center;
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgb(255, 80, 200, 0.6);
+    border-radius: 25px;
+    box-shadow: 0 0 30px rgb(255, 80, 200, 0.35);
+    color:#ffffff;
+    position: relative;
+    padding-bottom: 40px;
+}
+
+.cadre-message h1 {
+    color: #5905ff;
+    font-size: #00d9ff;
+    margin-bottom: 25px;
+    text-shadow: 0 0 15px #00bfff;
+}
+
+.cadre-message p {
+    font-size: 19px;
+    line-height: 1.8;
+    margin-bottom: 10px;
+}
+
+/* la signature avec effet ios 26*/
+
+.signature {
+  margin-top: 20px;
+  font-size: 12px;
+  color: rgba(241, 230, 240, 0.4); /* Couleur subtile et transparente */
+  letter-spacing: 1px;
+  font-family: var(--sans, sans-serif);
+  text-align: center;
+}
+
+/* le bouton decouvrir les photos d'elle*/
+ .btn-photos {
+    transition: 
+        transform 0.4s ease,
+        box-shadow 0.4s ease;
+    position: relative;
+}
+
+.btn-photos:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 0 25px #fd02a5;
+    z-index: 5;
+}
+.btn-photos {
+    display: inline-block;
+    background: #2b012c;
+    color: rgb(255, 3, 162);
+    padding: 14px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+
+}
+
+/* le bouton pour revenir a l'accueil */
+
+ .btn-accueil {
+    transition: 
+        transform 0.4s ease,
+        box-shadow 0.4s ease;
+    position: relative;
+}
+
+.btn-accueil:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 0 25px #b026ff;
+    z-index: 5;
+}
+.btn-accueil {
+    display: inline-block;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    width: auto;
+    height: auto;
+    padding: 8px 12px;
+    
+   
+    color: rgb(255, 3, 162);
+    text-decoration: none;
+    font-size: 18px;
+    
+    background: #2b012c;
+    border-radius: 12px;
+    border: 1px solid #d949ef;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    
+}
+
+
+/* pour que les photos conviennent dans le cadre*/
+
+.galerie {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 90%;
+    max-width: 900px;
+    margin: 30px auto;
+    box-sizing: border-box;
+}
+
+figure.cadre-photo {
+    
+    width: 100%;
+    min-width: 0;
+    height: 350px;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+    padding: 10%;
+    overflow: hidden;
+
+    border: 2px solid #d946ef;
+    border-radius: 15px;
+    background: rgba(80, 20, 120, 0.3);
+    box-shadow: 0 0 15px #b026ff;
+}
+
+figure.cadre-photo img {
+    
+    display: block;
+    width: 100%;
+    height: 280px;
+    min-height: 0;
+    flex: 0 0 280px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 10px;
+    
+}
+
+figure.cadre-photo figcaption {
+    color: white;
+    text-align: center;
+    padding: 8px 0;
+    overflow-wrap: anywhere;
+
+}
+
+
+
+/* affichage sur petit ecran */
+@media (max-width: 500px) {
+    .galerie{
+        grid-template-columns: 1fr;
+    }
+}
+
+/* pour les cadres et les photos montent et grossissent au passage de la sourie*/
+
+figure.cadre-photo {
+    transition: 
+        transform 0.4s ease,
+        box-shadow 0.4s ease;
+    position: relative;
+}
+
+figure.cadre-photo:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 0 25px #b026ff;
+    z-index: 5;
+}
+
+
+
+/* pour le bouton like et commenter*/
+
+figure.cadre-photo {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+figure.cadre-photo img {
+    width: 100%;
+    height: 220px;
+    flex:none;
+    object-fit: cover;
+
+}
+
+.actions-photo { 
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.actions-photo button,
+.form-commentaire button {
+    padding: 9px 12px;
+    border: 1px solid #d946ef;
+    border-radius: 20px;
+    background: #3b145b;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 8px #b026ff;
+}
+
+.actions-photo .btn-like.aime{
+    background: #d63384;
+    border-color: #ff8fbd;
+}
+
+.zone-commentaires{
+    margin-top: 12px;
+}
+
+.form-commentaire textarea {
+    display: block;
+    width: 100%;
+    min-height: 65px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid #d956ef;
+    background: #1d0b30;
+    color: white;
+    resize: vertical;
+}
+
+.form-commentaire button {
+    margin-top: 8px;
+}
+
+.liste-commentaires p {
+    padding: 8px;
+    overflow-wrap: anywhere;
+    color: white;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+}
+
+
+/* les effets speciales sur les boutons aime et commenter*/
+
+.actions-photo button {
+    transition: 
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+    background 0.3s ease;
+    cursor: pointer;
+}
+
+.actions-photo button:hover {
+    transform: translateY(-6px) scale(1.08);
+    box-shadow: 
+        0 0 12px #d946ef,
+        0 0 25px #b026ff;
+    background: #6b21a8;
+}
+
+.actions-photo button:active {
+    transform: translateY(-2px) scale(0.96);
+}
+
+.actions-photo .btn-like.aime:hover {
+    background: #d63384;
+    box-shadow: 
+    0 0 12px #ff69b4,
+    0 0 25px #ff1493;
+}
+
+.actions-photo .btn-like.aime:hover {
+    animation: battre 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes battre {
+    from {
+        transform: translateY(-3px) scale(1.05);
+    }
+    to {
+        transform: translateY(-7px) scale(1.15);
+    }
+}
+
+
+/* configuration du bouton qui conduit a la dernier page*/
+
+.navigation-photos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin: 40px auto;
+    flex-wrap: wrap;
+}
+
+.btn-navigation {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    color: rgb(61, 5, 138);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+
+    background: linear-gradient(
+        135deg
+        #c850ff,
+        #180148
+    );
+    box-shadow: 0 0 15px #c850ff;
+    transition: transform 0.3s ease,
+                box-shadow 0.3s ease;
+    animation: flotter 2s ease-in-out infinite;
+}
+
+@keyframes flotter {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50%{
+        transform: translateY(-8px);
+    }
+}
+
+.btn-navigation:hover {
+    transform: translateY(-5px) scale(1.08);
+    box-shadow: 0 0 30 #56015d;
+}
+
+.precedent {
+    animation-delay: 0s;
+}
+
+.suivant {
+    animation-delay: 0.5s;
+}
+
+/* le font violet et les effets des coeurs*/
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background-color: #12090c;
+    color: #f1e6f0;
+    overflow: hidden;
+}
+
+.container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    padding: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+.titre-gold {
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.titre-script {
+    font-size: 42px;
+    font-weight: normal;
+    font-style: italic;
+    margin: 0 0 15px 0;
+    color: #fce4ec;
+}
+
+.texte-patiente {
+    font-size: 14px;
+    color: #b0a8ab;
+    margin-bottom: 50px;
+}
+
+/* Barre de progression */
+.progress-wrapper {
+    position: relative;
+    width: 80vw;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+}
+
+.progress-bar-bg {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.progress-bar-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #ff8da1, #ff4d6d);
+    border-radius: 2px;
+    width: 10%;
+}
+
+/* Cœur mobile sur la barre */
+.progress-heart {
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    background: #ff5c77;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #ff5c77, 0 0 30px rgba(255, 92, 119, 0.6);
+    border: 2px solid #ffffff;
+    z-index: 5;
+}
+
+.progress-heart::after {
+    content: "♥";
+    color: white;
+    font-size: 18px;
+}
+
+/* Icône Cœur finale à droite (remplace le cadeau) */
+.target-heart-container {
+    position: absolute;
+    right: -25px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    border: 1px dashed rgba(255, 141, 161, 0.5);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(18, 9, 12, 0.8);
+}
+
+.target-heart-container::after {
+    content: "♥";
+    color: #ff8da1;
+    font-size: 20px;
+}
+
+/* Effet lumineux lorsque le cœur arrive à destination */
+.target-heart-container.shimmer {
+    border-color: #ff5c77;
+    box-shadow: 0 0 20px #ff5c77, 0 0 40px rgba(255, 92, 119, 0.8);
+    transform: translateY(-50%) scale(1.1);
+    transition: all 0.3s ease;
+}
+
+/* Conteneur des mini-cœurs pour l'explosion */
+#explosion-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 99;
+}
+
+.mini-heart {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: #ff5c77;
+    transform: rotate(-45deg);
+    animation: explode 0.8s ease-out forwards;
+}
+
+.mini-heart::before,
+.mini-heart::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: inherit;
+    border-radius: 50%;
+}
+
+.mini-heart::before {
+    top: -50%;
+    left: 0;
+}
+
+.mini-heart::after {
+    top: 0;
+    left: 50%;
+}
+
+@keyframes explode {
+    0% {
+        transform: translate(0, 0) rotate(-45deg) scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--dx), var(--dy)) rotate(-45deg) scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* pour la dernier page*/
+
+:root {
+  --bg: #12090c;
+  --text: #f1e6f0;
+  --sans: 'Inter', sans-serif;
+  --serif: 'Cormorant Garamond', serif;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.final-screen {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 5;
+}
+
+.final-card {
+  text-align: center;
+  max-width: 450px;
+  width: 100%;
+  padding: 40px 25px;
+  background: rgba(25, 10, 16, 0.75);
+  border-radius: 25px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 141, 161, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.big-heart {
+  font-size: 55px;
+  color: #ff5c77;
+  /* Effet de lueur (glow) initial */
+  text-shadow: 
+    0 0 15px rgba(255, 92, 119, 0.8), 
+    0 0 30px rgba(255, 92, 119, 0.5), 
+    0 0 50px rgba(255, 92, 119, 0.3);
+  margin-bottom: 15px;
+  /* Application de l'animation combinée (battement + clignotement de lumière) */
+  animation: heartbeatAndGlow 1.5s infinite ease-in-out;
+}
+
+/* Animation personnalisée pour battre et briller en même temps */
+@keyframes heartbeatAndGlow {
+  0% {
+    transform: scale(1);
+    text-shadow: 
+      0 0 10px rgba(255, 92, 119, 0.6), 
+      0 0 20px rgba(255, 92, 119, 0.3);
+  }
+  50% {
+    /* Le cœur grossit et la lumière s'intensifie (brille fort) */
+    transform: scale(1.15);
+    text-shadow: 
+      0 0 25px rgba(255, 120, 145, 1), 
+      0 0 50px rgba(255, 92, 119, 0.8), 
+      0 0 80px rgba(255, 92, 119, 0.5);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 
+      0 0 10px rgba(255, 92, 119, 0.6), 
+      0 0 20px rgba(255, 92, 119, 0.3);
+  }
+}
+
+@keyframes pulseHeart {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #d4af37;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  font-family: var(--sans);
+}
+
+.final-title {
+  font-family: var(--serif);
+  font-size: 44px;
+  font-style: italic;
+  font-weight: normal;
+  color: #fce4ec;
+  margin: 0 0 20px 0;
+}
+
+.final-description {
+  font-size: 15px;
+  color: #d1c7cb;
+  line-height: 1.5;
+  margin-bottom: 35px;
+  font-family: var(--sans);
+}
+
+.whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 30px;
+  box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease;
+  margin-bottom: 25px;
+}
+
+.whatsapp-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+}
+
+.whatsapp-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: #ffffff;
+}
+
+.creator-signature {
+  font-size: 13px;
+  color: rgba(255, 141, 161, 0.7);
+  letter-spacing: 1px;
+  font-family: var(--sans);
+}
+
+/* Cœurs flottants en arrière-plan */
+#floating-hearts-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.floating-heart {
+  position: absolute;
+  color: rgba(255, 105, 135, 0.4);
+  font-size: 16px;
+  user-select: none;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
